@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>MENA News Agent — Run {{ run.run_id }}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body { font-family: -apple-system, Segoe UI, Roboto, sans-serif; max-width: 820px; margin: 2rem auto; padding: 0 1rem; background: #0f1117; color: #e6e6e6; line-height: 1.55; }
+    a.back { color: #6ea8fe; text-decoration: none; font-size: 0.9rem; }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 1rem 0 1.5rem; }
+    .pill { background: #171a22; border: 1px solid #2a2d36; border-radius: 999px; padding: 0.2rem 0.7rem; font-size: 0.8rem; color: #9aa0ac; }
+    .warning { background: #3a1f1f; color: #f28b82; padding: 0.6rem 0.9rem; border-radius: 8px; margin-bottom: 1.2rem; font-size: 0.9rem; }
+    .report { background: #171a22; border: 1px solid #2a2d36; border-radius: 10px; padding: 1.2rem 1.5rem; }
+    .report h1, .report h2, .report h3 { color: #fff; }
+    .report code { background: #0f1117; padding: 0.1rem 0.3rem; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <a class="back" href="/dashboard{% if token %}?token={{ token }}{% endif %}">&larr; Back to run history</a>
+
+  <div class="meta">
+    <span class="pill">{{ run.timestamp }}</span>
+    <span class="pill">Sources: {{ run.sources_with_items }}/{{ run.sources_configured }}</span>
+    <span class="pill">Items: {{ run.final_items }}</span>
+    <span class="pill">Telegram sent: {{ "yes" if run.telegram_sent else "no" }}</span>
+  </div>
+
+  {% if not run.is_real_analysis %}
+  <div class="warning">
+    ⚠️ This run used the placeholder fallback template, not real AI analysis
+    (LLM was unavailable, misconfigured, or dry_run was requested).
+  </div>
+  {% endif %}
+
+  {% if run.used_seed_data %}
+  <div class="warning">
+    ⚠️ All configured sources failed to return items this run — seed placeholder
+    content was used instead of live news.
+  </div>
+  {% endif %}
+
+  <div class="report">
+    {{ report_html | safe }}
+  </div>
+</body>
+</html>

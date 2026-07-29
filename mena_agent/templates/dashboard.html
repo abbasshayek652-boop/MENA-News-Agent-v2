@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>MENA News Agent — Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body { font-family: -apple-system, Segoe UI, Roboto, sans-serif; max-width: 900px; margin: 2rem auto; padding: 0 1rem; background: #0f1117; color: #e6e6e6; }
+    h1 { font-size: 1.4rem; }
+    table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+    th, td { text-align: left; padding: 0.5rem 0.6rem; border-bottom: 1px solid #2a2d36; font-size: 0.92rem; }
+    th { color: #9aa0ac; font-weight: 600; }
+    tr:hover { background: #171a22; }
+    a { color: #6ea8fe; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .badge { display: inline-block; padding: 0.1rem 0.5rem; border-radius: 999px; font-size: 0.75rem; }
+    .badge-real { background: #16351f; color: #7ee08b; }
+    .badge-fallback { background: #3a1f1f; color: #f28b82; }
+    .empty { color: #9aa0ac; margin-top: 2rem; }
+  </style>
+</head>
+<body>
+  <h1>📰 MENA News Agent — Run History</h1>
+
+  {% if runs %}
+  <table>
+    <thead>
+      <tr>
+        <th>Timestamp (UTC)</th>
+        <th>Sources</th>
+        <th>Items</th>
+        <th>Analysis</th>
+        <th>Telegram</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for run in runs %}
+      <tr>
+        <td><a href="/dashboard/runs/{{ run.run_id }}{% if token %}?token={{ token }}{% endif %}">{{ run.timestamp }}</a></td>
+        <td>{{ run.sources_with_items }}/{{ run.sources_configured }}</td>
+        <td>{{ run.final_items }}</td>
+        <td>
+          {% if run.is_real_analysis %}
+            <span class="badge badge-real">AI analysis</span>
+          {% else %}
+            <span class="badge badge-fallback">placeholder</span>
+          {% endif %}
+        </td>
+        <td>{{ "✅" if run.telegram_sent else "—" }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="empty">No runs yet. Trigger one with <code>POST /run</code>.</p>
+  {% endif %}
+</body>
+</html>
