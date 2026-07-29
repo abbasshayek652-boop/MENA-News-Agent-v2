@@ -47,6 +47,7 @@ jobs:
             --project "${{ secrets.GCP_PROJECT_ID }}" \
             --region "$REGION" \
             --allow-unauthenticated \
+            --service-account "${{ secrets.GCP_SA_EMAIL }}" \
             --set-env-vars "DRY_RUN=1,DATA_DIR=/tmp/mena-agent,SOURCE_CONFIG=config/sources.yaml,STORAGE_BACKEND=local" \
             --set-secrets "TELEGRAM_BOT_TOKEN=telegram-bot-token:latest,TELEGRAM_CHAT_ID=telegram-chat-id:latest,ANTHROPIC_API_KEY=anthropic-api-key:latest,API_SECRET_TOKEN=api-secret-token:latest"
 
